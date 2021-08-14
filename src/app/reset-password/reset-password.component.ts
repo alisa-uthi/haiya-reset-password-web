@@ -12,6 +12,9 @@ export class ResetPasswordComponent implements OnInit {
   passwordForm: FormGroup
   userId: number = 0
   resetToken: string = ''
+  
+  resetSuccess: boolean = false
+  responseMsg: string = ''
 
   constructor(
     private http: HttpClient,
@@ -22,7 +25,6 @@ export class ResetPasswordComponent implements OnInit {
       .subscribe(params => {
         this.userId = params.id;
         this.resetToken = params.token;
-        console.log(this.userId, this.resetToken)
       }
     );
 
@@ -58,13 +60,15 @@ export class ResetPasswordComponent implements OnInit {
 
   async onSubmit() {
     if(this.passwordForm.valid) {
-      console.log(this.password?.value)
-
-      const response = await this.http.post(`localhost:8000/auth/${this.userId}/reset-password`, {
+      let response = await this.http.post(`http://localhost:8000/auth/${this.userId}/reset-password`, {
         password: this.password?.value,
         token: this.resetToken
-      }).toPromise()
-      console.log(response)
+      }).toPromise<any>()
+      
+      if(response.messageId) {
+        this.resetSuccess = true;
+        this.responseMsg = response.message
+      }
     } 
   }
 
