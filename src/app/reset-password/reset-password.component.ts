@@ -60,14 +60,17 @@ export class ResetPasswordComponent implements OnInit {
 
   async onSubmit() {
     if(this.passwordForm.valid) {
-      let response = await this.http.post(`http://localhost:8000/auth/${this.userId}/reset-password`, {
+      let response = await this.http.post(`http://localhost:8080/api/user/auth/${this.userId}/reset-password`, {
         password: this.password?.value,
         token: this.resetToken
       }).toPromise<any>()
       
-      if(response.messageId) {
+      if(response.status == 200) {
         this.resetSuccess = true;
         this.responseMsg = response.message
+      } else {
+        this.resetSuccess = false;
+        this.responseMsg = response.error
       }
     } 
   }
