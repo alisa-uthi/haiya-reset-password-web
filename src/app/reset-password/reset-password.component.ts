@@ -13,7 +13,7 @@ export class ResetPasswordComponent implements OnInit {
   userId: number = 0
   resetToken: string = ''
   
-  resetSuccess: boolean = false
+  resetSuccess: boolean | undefined
   responseMsg: string = ''
 
   constructor(
@@ -65,12 +65,12 @@ export class ResetPasswordComponent implements OnInit {
         token: this.resetToken
       }).toPromise<any>()
       
-      if(response.status == 200) {
+      if(response.messageId) {
         this.resetSuccess = true;
         this.responseMsg = response.message
       } else {
         this.resetSuccess = false;
-        this.responseMsg = response.error
+        this.responseMsg = response.message
       }
     } 
   }
